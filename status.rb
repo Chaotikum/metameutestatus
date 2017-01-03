@@ -18,16 +18,16 @@ class StatusApp < Sinatra::Base
       Rack::Utils.escape_html(text)
     end
     def getstatus
-      # All status changes from the two weeks
-      since = Time.now.getutc - 60*60*24*14
-      status = DB.execute("SELECT * FROM status WHERE timestamp > ? ORDER BY timestamp DESC LIMIT 50", '' + since.to_s)
+      # max 20 status der letzten Woche
+      since = Time.now.getutc - 60*60*24*7
+      status = DB.execute("SELECT * FROM status WHERE timestamp > ? ORDER BY timestamp DESC LIMIT 20", since.to_s)
       if status.length == 0
           status = DB.execute("SELECT * FROM status ORDER BY timestamp DESC LIMIT 2")
       end
       return status
     end
     def getmessages(status)
-      # and the matching messages
+      # und nur Messages, die zu den gefundenen Status passen
       messages = DB.execute("SELECT * FROM messages WHERE timestamp > ? ORDER BY timestamp LIMIT 200", status[-1]["timestamp"])
       return messages
     end
@@ -80,7 +80,7 @@ class StatusApp < Sinatra::Base
     (statusS.zip status).each do |d, dPrev|
       if d != nil and dPrev != nil
         if d['door_open'] != dPrev['door_open']
-          start = d['timestamp'] + " UTC"
+          start = Time.parse(d['timestamp'] + "UTC")
           @duration = Time.diff(Time.now(), start, '%h:%m')[:diff]
           break
         end
@@ -153,7 +153,7 @@ class StatusApp < Sinatra::Base
       if d != nil and dPrev != nil
         if d['door_open'] != dPrev['door_open']
           start = d['timestamp']
-          @lastchange = Time.parse(start + " UTC").to_i
+          @lastchange = Time.parse(start + "UTC")
           break
         end
       end
@@ -166,11 +166,16 @@ class StatusApp < Sinatra::Base
     end
 
     json = YAML.load_file('status.yml')
-    json[:open] = @open
+    json['state'][:open]= @open
+    json['state'][:lastchange] = @lastchange
+
+    #For compatibility with systems that expect it here...
+    json[:open]= @open
     json[:lastchange] = @lastchange
 
-    content_type 'application/json'
-    jsonp json
+    res = jsonp json
+    content_type 'application/json', :charset => 'utf-8'
+    res
   end
 
   # start the server if ruby file executed directly

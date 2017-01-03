@@ -6,7 +6,7 @@ import urllib
 import urllib2
 import getpass
 
-BASE = "https://status.metameute.de/"
+BASE = "http://status.nobreakspace.org/"
 
 if len(sys.argv) > 1:
   msg = " ".join(sys.argv[1:])

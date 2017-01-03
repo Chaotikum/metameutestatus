@@ -10,11 +10,23 @@ contact:
   email: info+spaceapi@chaotikum.org
   ml: intern+spaceapi@chaotikum.org
   irc: irc://irc.hackint.eu/#chaotikum
+  twitter: "@Chaotikum_eV"
 logo: http://nobreakspace.org/status/images/logo.png
 feeds:
   blog:
-    type: application/rss+xml
+    type: rss
     url: http://chaotikum.org/feed.php?ns=news&linkto=current&content=rss
+  wiki:
+    type: www
+    url: http://chaotikum.org
+projects:
+  - http://chaotikum.org/projekte:freifunk
+  - http://chaotikum.org/projekte:icebox
+  - http://chaotikum.org/projekte:tanztatur
+  - http://chaotikum.org/projekte:arm-hacking
+  - http://chaotikum.org/projekte:rock-ola
+  - http://chaotikum.org/projekte:chaosmachtschule
+  - http://chaotikum.org/projekte:bunt
 location:
   lat: 53.8683
   lon: 10.6852

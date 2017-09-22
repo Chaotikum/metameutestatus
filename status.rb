@@ -81,7 +81,7 @@ class StatusApp < Sinatra::Base
       if d != nil and dPrev != nil
         if d['door_open'] != dPrev['door_open']
           start = Time.parse(d['timestamp'] + "UTC")
-          @duration = Time.diff(Time.now(), start, '%h:%m')[:diff]
+          @duration = Time.diff(Time.now(), start, '%hh %mm')[:diff]
           break
         end
       end
